@@ -1,9 +1,17 @@
 import axios from "axios";
+import config from "../config";
 
-const API_URL = "http://localhost:1337"; 
-
-const api = {
-
+const Api = {
+  getContacts: async () => {
+    const url = config.passenger;
+    const response = await axios.get(url);
+    return response.data;
+  },
+  getContact: async (id) => {
+    const url = config.passenger_id.replace("{id}", id);
+    const response = await axios.get(url);
+    return response.data;
+  },
 };
 
-export default api;
+export default Api;
