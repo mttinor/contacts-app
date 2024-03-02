@@ -2,31 +2,37 @@ import React, { useEffect, useState } from "react";
 import withLayout from "../components/withLayout";
 import Api from "../services/api";
 import ContactList from "../components/ContactList";
+import { ToastError } from "../utils/handleError";
+import Spinner from "../components/base/Spinner";
 
-import { toast } from "react-toastify";
 const Home = () => {
   const [contacts, setContacts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const fetchData = async () => {
     try {
+      setIsLoading(true);
       const { items } = await Api.getContacts();
       setContacts(items);
     } catch (err) {
-      console.log(err);
-      toast.error("ss");
+      ToastError(err);
+    } finally {
+      setIsLoading(false);
     }
   };
   useEffect(() => {
     fetchData();
   }, []);
 
+  if (isLoading) return <Spinner />;
+  if (isLoading && contacts.length == 0)
+    return (
+      <>
+        <h1>لیست مخاطبین خالی است</h1>
+      </>
+    );
   return (
-    // <div className="container mx-auto py-8">
-    //   <h1 className="text-3xl font-bold mb-4 mx-3">لیست مخاطبین</h1>
-    //   <ContactList contacts={contacts} />
-    // </div>
     <div className="content">
       <div className="scrollable-content">
-        {/* Content that can overflow */}
         <ContactList contacts={contacts} />
       </div>
     </div>
