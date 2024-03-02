@@ -6,7 +6,7 @@ const Navbar = () => {
     <header>
       <nav className="bg-gray-800 p-4">
         <div className="flex items-center justify-between">
-          <div className="text-white">Logo</div>
+          <div className="text-white px-4">Logo</div>
         </div>
       </nav>
     </header>
