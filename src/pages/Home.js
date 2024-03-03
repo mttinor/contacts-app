@@ -7,6 +7,7 @@ import ContactList from "../components/ContactList";
 import withLayout from "../components/withLayout";
 import RecentlyContacted from "../components/RecentlyContacted";
 import { useNavigate } from "react-router-dom";
+import { ToastError } from "./../utils/handleError";
 const initialState = {
   recentContracts: [],
 };
@@ -32,12 +33,13 @@ function Home() {
   const debouncedValue = useDebounce(value, 250);
   const fetchData = useCallback(
     async (signal) => {
-      const query =
-        typeof parseInt(debouncedValue) === "number" &&
-        parseInt(debouncedValue) > 0
-          ? "phone"
-          : "first_name";
+      setIsLoading(true);
       try {
+        const query =
+          typeof parseInt(debouncedValue) === "number" &&
+          parseInt(debouncedValue) > 0
+            ? "phone"
+            : "first_name";
         let params = {
           where: {
             [query]: {
@@ -49,8 +51,10 @@ function Home() {
         const { items } = await Api.getContacts(params, signal);
 
         setContacts(items);
-      } catch (error) {
-        console.error("Fetch error:", error);
+      } catch (err) {
+        ToastError(err);
+      } finally {
+        setIsLoading(false);
       }
     },
     [debouncedValue]
@@ -84,9 +88,9 @@ function Home() {
   useEffect(() => {
     const controller = new AbortController();
     const { signal } = controller;
-    setIsLoading(true);
+
     fetchData(signal);
-    setIsLoading(false);
+
     return () => {
       controller.abort();
     };
