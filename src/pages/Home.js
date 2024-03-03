@@ -6,7 +6,7 @@ import Spinner from "../components/base/Spinner";
 import ContactList from "../components/ContactList";
 import withLayout from "../components/withLayout";
 import RecentlyContacted from "../components/RecentlyContacted";
-
+import { useNavigate } from "react-router-dom";
 const initialState = {
   recentContracts: [],
 };
@@ -28,8 +28,8 @@ function Home() {
   const [value, setValue] = useState("");
   const [contacts, setContacts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
   const debouncedValue = useDebounce(value, 250);
-
   const fetchData = useCallback(
     async (signal) => {
       const query =
@@ -71,7 +71,6 @@ function Home() {
     localStorage.setItem("recentContract", JSON.stringify(contract));
   };
   const handleContactClick = (contact) => {
-  
     let updatedContracts;
     if (state.recentContracts.length > 0) {
       updatedContracts = [contact, ...state.recentContracts.slice(0, 3)];
@@ -79,7 +78,7 @@ function Home() {
       updatedContracts = [contact];
     }
     setRecentContract(updatedContracts);
-
+    navigate(`/contact/${contact.id}`);
   };
 
   useEffect(() => {
@@ -95,14 +94,17 @@ function Home() {
 
   return (
     <div className="content">
-      {state.recentContracts.length > 0 && (
-        <RecentlyContacted recentContracts={state.recentContracts} />
-      )}
-      <Input
-        placeholder="نام مخاطب یا شماره همراه"
-        value={value}
-        onChangeValue={(e) => setValue(e.target.value)}
-      />
+      <div className="p-3">
+        {state.recentContracts.length > 0 && (
+          <RecentlyContacted recentContracts={state.recentContracts} />
+        )}
+        <Input
+          placeholder="نام مخاطب یا شماره همراه"
+          value={value}
+          onChangeValue={(e) => setValue(e.target.value)}
+        />
+      </div>
+
       <div className="scrollable-content">
         {isLoading && <Spinner />}
         <ContactList

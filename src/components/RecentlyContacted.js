@@ -6,8 +6,8 @@ const RecentlyContacted = ({ recentContracts }) => {
   return (
     <div className="story-container">
       {recentContracts.map((contact, i) => (
-        <a href={`/contact/${contact.id}`}>
-          <div key={i} className="story-item">
+        <a key={i} href={`/contact/${contact.id}`}>
+          <div className="story-item">
             <img
               src={contact.avatar || defaultAvatar}
               alt={contact.first_name}
