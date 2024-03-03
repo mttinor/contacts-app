@@ -4,6 +4,7 @@ import ContactDetails from "../components/ContactDetails";
 import Api from "../services/api";
 import { ToastError } from "../utils/handleError";
 import { useParams } from "react-router-dom";
+import Spinner from "../components/base/Spinner";
 const Contact = () => {
   const { id } = useParams();
   const [contact, setContact] = useState([]);
@@ -25,7 +26,7 @@ const Contact = () => {
   return (
     <div className="content">
       <div className="scrollable-content">
-        <ContactDetails contact={contact} />
+        {isLoading ? <Spinner /> : <ContactDetails contact={contact} />}
       </div>
     </div>
   );

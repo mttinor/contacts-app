@@ -6,11 +6,13 @@ const Input = ({
   title,
   value,
   onChangeValue,
+  placeholder,
 }) => {
   return (
-    <div className="mb-4">
+    <div className="">
       <label className="block text-sm font-medium text-gray-700">{title}</label>
       <input
+        placeholder={placeholder}
         readOnly={readOnly}
         type={type}
         value={value}

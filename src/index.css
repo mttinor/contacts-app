@@ -29,7 +29,7 @@ footer {
 }
 
 .scrollable-content {
-  max-height: calc(97vh - 110px);
+  max-height: calc(90vh - 110px);
   overflow-y: auto;
 }
 

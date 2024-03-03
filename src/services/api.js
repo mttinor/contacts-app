@@ -2,9 +2,12 @@ import axios from "axios";
 import config from "../config";
 
 const Api = {
-  getContacts: async () => {
+  getContacts: async (params, signal) => {
     const url = config.passenger;
-    const response = await axios.get(url);
+    const response = await axios.get(url, {
+      params,
+      signal,
+    });
     return response.data;
   },
   getContact: async (id) => {
