@@ -1,6 +1,6 @@
 import React from "react";
 
-const ContactList = ({ contacts }) => {
+const ContactList = ({ contacts, handleContactClick }) => {
   const defaultAvatar = "https://via.placeholder.com/150";
   return (
     <>
@@ -9,7 +9,10 @@ const ContactList = ({ contacts }) => {
           key={i}
           className="bg-white rounded-lg shadow-md p-6 my-3 cursor-pointer mx-3"
         >
-          <a href={`/contact/${contact.id}`}>
+          <a
+            href={`/contact/${contact.id}`}
+            onClick={() => handleContactClick(contact)}
+          >
             <div className="flex items-center space-x-4 rtl:space-x-reverse">
               <div className="flex-shrink-0">
                 <img
