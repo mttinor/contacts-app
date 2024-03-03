@@ -8,21 +8,7 @@ import withLayout from "../components/withLayout";
 import RecentlyContacted from "../components/RecentlyContacted";
 import { useNavigate } from "react-router-dom";
 import { ToastError } from "./../utils/handleError";
-const initialState = {
-  recentContracts: [],
-};
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "SET_RECENT_CONTRACT":
-      return {
-        ...state,
-        recentContracts: action.payload,
-      };
-    default:
-      return state;
-  }
-};
+import { reducer, initialState } from "./../reducers/recentlyContactReducer";
 
 function Home() {
   const [state, dispatch] = useReducer(reducer, initialState);
