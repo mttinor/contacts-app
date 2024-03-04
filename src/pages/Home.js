@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import Input from "../components/base/Input";
 import useDebounce from "../customHook/useDebounce";
 import Api from "../services/api";
@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastError } from "./../utils/handleError";
 import { reducer, initialState } from "./../reducers/recentlyContactReducer";
 import Select from "./../components/base/Select";
-function Home() {
+function Homesss() {
   const filterOptions = [
     {
       value: "first_name",
@@ -29,25 +29,29 @@ function Home() {
   const [value, setValue] = useState("");
   const [selectValue, setSelectValue] = useState("");
   const [checkChooseFilter, setCheckChooseFilter] = useState(false);
-
+  const [limit, setLimit] = useState(30);
   const [contacts, setContacts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const debouncedValue = useDebounce(value, 250);
-
+  const debouncedValue = useDebounce(value);
+  const divRef = useRef(null);
+  const [isEndOfScroll, setIsEndOfScroll] = useState(false);
   //  controles fetch data
   const fetchData = useCallback(
     async (signal) => {
       setIsLoading(true);
       try {
-        const key = selectValue ? selectValue : "first_name";
+        const key = selectValue ? selectValue : "";
         let params = {
-          where: {
+          limit,
+        };
+        if (key) {
+          params.where = {
             [key]: {
               contains: debouncedValue,
             },
-          },
-        };
+          };
+        }
 
         const { items } = await Api.getContacts(params, signal);
 
@@ -58,7 +62,7 @@ function Home() {
         setIsLoading(false);
       }
     },
-    [debouncedValue]
+    [debouncedValue, limit]
   );
 
   // get localStorage and set recent contact
@@ -116,6 +120,34 @@ function Home() {
     }
   };
 
+  // handleScroll for understand when user and end of scroll
+  const handleScroll = () => {
+    const div = divRef.current;
+    if (div) {
+      const { scrollTop, scrollHeight, clientHeight } = div;
+      const atBottom = Math.ceil(scrollTop + clientHeight) >= scrollHeight;
+      if (atBottom) setIsEndOfScroll(atBottom);
+    }
+  };
+
+  // event listener for scroll
+  useEffect(() => {
+    const div = divRef.current;
+    if (div) {
+      div.addEventListener("scroll", handleScroll);
+      return () => {
+        div.removeEventListener("scroll", handleScroll);
+      };
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isEndOfScroll) {
+      // Increase the limit when reaching the end of scroll
+      setLimit((prevLimit) => prevLimit + 30); // Increase limit by 10 (or any desired value)
+      setIsEndOfScroll(false)
+    }
+  }, [isEndOfScroll]);
   return (
     <div className="content">
       <div className="p-3">
@@ -139,7 +171,7 @@ function Home() {
         </div>
       </div>
 
-      <div className="scrollable-content">
+      <div ref={divRef} className="scrollable-content">
         {isLoading && <Spinner />}
         <ContactList
           contacts={contacts}
@@ -150,4 +182,4 @@ function Home() {
   );
 }
 
-export default withLayout(Home);
+export default withLayout(Homesss);
