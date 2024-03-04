@@ -20,9 +20,14 @@ const Contact = () => {
       setIsLoading(false);
     }
   };
+
+
+  // fetch data with contact id 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [id]);
+
+
   return (
     <div className="content">
       <div className="scrollable-content">
