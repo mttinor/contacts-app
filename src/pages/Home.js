@@ -9,10 +9,27 @@ import RecentlyContacted from "../components/RecentlyContacted";
 import { useNavigate } from "react-router-dom";
 import { ToastError } from "./../utils/handleError";
 import { reducer, initialState } from "./../reducers/recentlyContactReducer";
-
+import Select from "./../components/base/Select";
 function Home() {
+  const filterOptions = [
+    {
+      value: "first_name",
+      name: "نام",
+    },
+    {
+      value: "last_name",
+      name: "خانوادگی",
+    },
+    {
+      value: "phone",
+      name: "شماره همراه",
+    },
+  ];
   const [state, dispatch] = useReducer(reducer, initialState);
   const [value, setValue] = useState("");
+  const [selectValue, setSelectValue] = useState("");
+  const [checkChooseFilter, setCheckChooseFilter] = useState(false);
+
   const [contacts, setContacts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -21,14 +38,10 @@ function Home() {
     async (signal) => {
       setIsLoading(true);
       try {
-        const query =
-          typeof parseInt(debouncedValue) === "number" &&
-          parseInt(debouncedValue) > 0
-            ? "phone"
-            : "first_name";
+        const key = selectValue ? selectValue : "first_name";
         let params = {
           where: {
-            [query]: {
+            [key]: {
               contains: debouncedValue,
             },
           },
@@ -43,7 +56,7 @@ function Home() {
         setIsLoading(false);
       }
     },
-    [debouncedValue]
+    [debouncedValue, selectValue]
   );
 
   useEffect(() => {
@@ -82,17 +95,40 @@ function Home() {
     };
   }, [fetchData]);
 
+  const onChangeSelect = (e) => {
+    setCheckChooseFilter(false);
+    setSelectValue(e.target.value);
+  };
+
+  // 
+  const onClickInput = (e) => {
+    if (selectValue === "") {
+      ToastError(" لطفا نوع فیلتر را مشخص کنید ");
+      setCheckChooseFilter(true);
+    }
+  };
+
   return (
     <div className="content">
       <div className="p-3">
         {state.recentContracts.length > 0 && (
           <RecentlyContacted recentContracts={state.recentContracts} />
         )}
-        <Input
-          placeholder="نام مخاطب یا شماره همراه"
-          value={value}
-          onChangeValue={(e) => setValue(e.target.value)}
-        />
+        <div>
+          <Select
+            titleSelected="فیلتر مورد نظر را انتخاب کنید"
+            value={selectValue}
+            options={filterOptions}
+            onChangeValue={onChangeSelect}
+          />
+          <Input
+            readOnly={checkChooseFilter}
+            placeholder="نام مخاطب یا شماره همراه"
+            value={value}
+            onChangeValue={(e) => setValue(e.target.value)}
+            onClickInput={onClickInput}
+          />
+        </div>
       </div>
 
       <div className="scrollable-content">

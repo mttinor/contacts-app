@@ -26,7 +26,7 @@ const ContactList = ({ contacts, handleContactClick }) => {
                 {contact.phone}
               </p>
               <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                {contact.city}
+                {contact.address}
               </p>
             </div>
           </div>
