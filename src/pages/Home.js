@@ -58,7 +58,7 @@ function Home() {
         setIsLoading(false);
       }
     },
-    [debouncedValue, selectValue]
+    [debouncedValue]
   );
 
   // get localStorage and set recent contact
