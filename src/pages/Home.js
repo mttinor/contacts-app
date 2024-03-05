@@ -42,6 +42,7 @@ function Homesss() {
   const fetchData = useCallback(
     async (signal) => {
       setIsLoading(true);
+
       try {
         const key = selectValue ? selectValue : "";
         let params = {
@@ -62,6 +63,7 @@ function Homesss() {
       } catch (err) {
         ToastError(err);
       } finally {
+        setIsEndOfScroll(false);
         setIsLoading(false);
       }
     },
@@ -109,7 +111,7 @@ function Homesss() {
     };
   }, [fetchData]);
 
-  // when user change select at frist allow to user to write then set value
+  // when user change select at first allow to user to write then set value
   const onChangeSelect = (e) => {
     setCheckChooseFilter(false);
     setSelectValue(e.target.value);
@@ -120,12 +122,6 @@ function Homesss() {
     if (selectValue === "") {
       ToastError(" لطفا نوع فیلتر را مشخص کنید ");
       setCheckChooseFilter(true);
-    } else {
-      const div = divRef.current;
-      if (div) {
-        div.scrollTop = 0;
-        setIsEndOfScroll(false);
-      }
     }
   };
 
@@ -154,7 +150,6 @@ function Homesss() {
   useEffect(() => {
     if (isEndOfScroll && totalItems > limit) {
       setLimit((prevLimit) => prevLimit + 30);
-      setIsEndOfScroll(false);
     }
   }, [isEndOfScroll]);
   return (
