@@ -118,6 +118,7 @@ function Homesss() {
 
   // when user change select at first allow to user to write then set value
   const onChangeSelect = (e) => {
+    setValue("");
     setCheckChooseFilter(false);
     setSelectValue(e.target.value);
   };
@@ -127,6 +128,7 @@ function Homesss() {
     if (selectValue === "") {
       ToastError(" لطفا نوع فیلتر را مشخص کنید ");
       setCheckChooseFilter(true);
+
     }
   };
 
@@ -172,7 +174,7 @@ function Homesss() {
           />
           <Input
             readOnly={checkChooseFilter}
-            placeholder="نام مخاطب یا شماره همراه"
+            placeholder="نام/ نام خانوادگی یا شماره همراه"
             value={value}
             onChangeValue={(e) => setValue(e.target.value)}
             onClickInput={onClickInput}
