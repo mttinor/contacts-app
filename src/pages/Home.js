@@ -117,6 +117,11 @@ function Homesss() {
     if (selectValue === "") {
       ToastError(" لطفا نوع فیلتر را مشخص کنید ");
       setCheckChooseFilter(true);
+    } else {
+      const div = divRef.current;
+      if (div) {
+        div.scrollTop = 0;
+      }
     }
   };
 
@@ -145,7 +150,7 @@ function Homesss() {
     if (isEndOfScroll) {
       // Increase the limit when reaching the end of scroll
       setLimit((prevLimit) => prevLimit + 30); // Increase limit by 10 (or any desired value)
-      setIsEndOfScroll(false)
+      setIsEndOfScroll(false);
     }
   }, [isEndOfScroll]);
   return (
@@ -172,11 +177,14 @@ function Homesss() {
       </div>
 
       <div ref={divRef} className="scrollable-content">
-        {isLoading && <Spinner />}
-        <ContactList
-          contacts={contacts}
-          handleContactClick={handleContactClick}
-        />
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <ContactList
+            contacts={contacts}
+            handleContactClick={handleContactClick}
+          />
+        )}
       </div>
     </div>
   );
