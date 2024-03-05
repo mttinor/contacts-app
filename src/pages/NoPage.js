@@ -1,4 +1,7 @@
+import { useTranslation } from "react-i18next";
+
 export default function NoPage() {
+  const { t } = useTranslation();
   return (
     <div
       style={{
@@ -9,7 +12,7 @@ export default function NoPage() {
         alignItems: "center",
       }}
     >
-      <h1>صفحه مورد نظر یافت نشد </h1>
+      <h1>{t("pageNotFind")}</h1>
     </div>
   );
 }

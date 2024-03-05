@@ -7,10 +7,13 @@ import ContactList from "../components/ContactList";
 import withLayout from "../components/withLayout";
 import RecentlyContacted from "../components/RecentlyContacted";
 import { useNavigate } from "react-router-dom";
-import { ToastError } from "./../utils/handleError";
+import HandleError from "./../utils/handleError";
 import { reducer, initialState } from "./../reducers/recentlyContactReducer";
 import Select from "./../components/base/Select";
-function Homesss() {
+import helpers from "../utils/helpers";
+import { useTranslation } from "react-i18next";
+
+function Home() {
   const filterOptions = [
     {
       value: "first_name",
@@ -31,18 +34,18 @@ function Homesss() {
   const [checkChooseFilter, setCheckChooseFilter] = useState(false);
   const [limit, setLimit] = useState(30);
   const [totalItems, setTotalItems] = useState(0);
-
   const [contacts, setContacts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const debouncedValue = useDebounce(value);
   const divRef = useRef(null);
   const [isEndOfScroll, setIsEndOfScroll] = useState(false);
+  const { t } = useTranslation();
+
   //  controles fetch data
   const fetchData = useCallback(
     async (signal) => {
       setIsLoading(true);
-
       try {
         const key = selectValue ? selectValue : "";
         let params = {
@@ -51,7 +54,7 @@ function Homesss() {
         if (key) {
           params.where = {
             [key]: {
-              contains: debouncedValue,
+              contains: helpers.capitalizeFirstLetter(debouncedValue),
             },
           };
         }
@@ -61,7 +64,7 @@ function Homesss() {
         setTotalItems(meta?.total);
         setContacts(items);
       } catch (err) {
-        ToastError(err);
+        HandleError.ToastError(err);
       } finally {
         setIsEndOfScroll(false);
         setIsLoading(false);
@@ -95,7 +98,7 @@ function Homesss() {
       if (!user)
         updatedContracts = [contact, ...state.recentContracts.slice(0, 3)];
       else {
-        updatedContracts = [...state.recentContracts.slice(0, 3)];
+        updatedContracts = [...state.recentContracts];
       }
     } else {
       updatedContracts = [contact];
@@ -126,9 +129,8 @@ function Homesss() {
   // when user click on input and user dosent choose filter show alert
   const onClickInput = () => {
     if (selectValue === "") {
-      ToastError(" لطفا نوع فیلتر را مشخص کنید ");
+      HandleError.ToastError(t("filterKind"));
       setCheckChooseFilter(true);
-
     }
   };
 
@@ -167,14 +169,14 @@ function Homesss() {
         )}
         <div>
           <Select
-            titleSelected="فیلتر مورد نظر را انتخاب کنید"
+            titleSelected={t("filterChoose")}
             value={selectValue}
             options={filterOptions}
             onChangeValue={onChangeSelect}
           />
           <Input
             readOnly={checkChooseFilter}
-            placeholder="نام/ نام خانوادگی یا شماره همراه"
+            placeholder={t("filterPlaceholder")}
             value={value}
             onChangeValue={(e) => setValue(e.target.value)}
             onClickInput={onClickInput}
@@ -193,4 +195,4 @@ function Homesss() {
   );
 }
 
-export default withLayout(Homesss);
+export default withLayout(Home);

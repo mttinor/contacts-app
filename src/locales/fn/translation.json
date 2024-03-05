@@ -1,0 +1,15 @@
+{
+  "filterKind": "لطفا نوع فیلتر را مشخص کنید ",
+  "filterChoose": "فیلتر مورد نظر را انتخاب کنید",
+  "filterPlaceholder": "نام/ نام خانوادگی یا شماره همراه",
+  "pageNotFind": "صفحه مورد نظر یافت نشد ",
+  "contractLists": "لیست مخاطبین",
+  "contractNotExist": "مخاطب یافت نشد ",
+  "phone": "شماره همراه",
+  "email": "ایمیل",
+  "gender": "جنسیت",
+  "address": "آدرس",
+  "telegram": "تلگرام",
+  "company": "شرکت",
+  "note": "یاداشت"
+}

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import withLayout from "../components/withLayout";
 import ContactDetails from "../components/ContactDetails";
 import Api from "../services/api";
-import { ToastError } from "../utils/handleError";
+import HandleError from "../utils/handleError";
 import { useParams } from "react-router-dom";
 import Spinner from "../components/base/Spinner";
 const Contact = () => {
@@ -15,18 +15,16 @@ const Contact = () => {
       const item = await Api.getContact(id);
       setContact(item);
     } catch (err) {
-      ToastError(err);
+      HandleError.ToastError(err);
     } finally {
       setIsLoading(false);
     }
   };
 
-
-  // fetch data with contact id 
+  // fetch data with contact id
   useEffect(() => {
     fetchData();
   }, [id]);
-
 
   return (
     <div className="content">

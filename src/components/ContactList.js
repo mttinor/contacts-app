@@ -1,6 +1,7 @@
 import React from "react";
-
+import { useTranslation } from "react-i18next";
 const ContactList = ({ contacts, handleContactClick }) => {
+  const { t } = useTranslation();
   const defaultAvatar = "https://via.placeholder.com/150";
   return (
     <>
@@ -35,7 +36,7 @@ const ContactList = ({ contacts, handleContactClick }) => {
         ))
       ) : (
         <>
-          <p className="text-center text-lg ">مخاطب یافت نشد </p>
+          <p className="text-center text-lg ">{t("contractNotExist")}</p>
         </>
       )}
     </>

@@ -1,6 +1,7 @@
 import React from "react";
-
+import { useTranslation } from "react-i18next";
 const Footer = () => {
+  const { t } = useTranslation();
   return (
     <footer className="bg-gray-800 p-4 text-white text-center">
       <div className="flex justify-center space-x-4">
@@ -19,7 +20,7 @@ const Footer = () => {
               d="M4 6h16M4 10h16M4 14h16M4 18h16"
             />
           </svg>
-          لیست مخاطبین
+          {t("contractLists")}
         </a>
       </div>
     </footer>
