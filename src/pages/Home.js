@@ -91,7 +91,12 @@ function Homesss() {
   const handleContactClick = (contact) => {
     let updatedContracts;
     if (state.recentContracts.length > 0) {
-      updatedContracts = [contact, ...state.recentContracts.slice(0, 3)];
+      const user = state.recentContracts.find((x) => x.id === contact.id);
+      if (!user)
+        updatedContracts = [contact, ...state.recentContracts.slice(0, 3)];
+      else {
+        updatedContracts = [...state.recentContracts.slice(0, 3)];
+      }
     } else {
       updatedContracts = [contact];
     }
