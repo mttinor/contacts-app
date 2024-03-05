@@ -30,6 +30,8 @@ function Homesss() {
   const [selectValue, setSelectValue] = useState("");
   const [checkChooseFilter, setCheckChooseFilter] = useState(false);
   const [limit, setLimit] = useState(30);
+  const [totalItems, setTotalItems] = useState(0);
+
   const [contacts, setContacts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -53,8 +55,9 @@ function Homesss() {
           };
         }
 
-        const { items } = await Api.getContacts(params, signal);
+        const { items, meta } = await Api.getContacts(params, signal);
 
+        setTotalItems(meta?.total);
         setContacts(items);
       } catch (err) {
         ToastError(err);
@@ -113,7 +116,7 @@ function Homesss() {
   };
 
   // when user click on input and user dosent choose filter show alert
-  const onClickInput = (e) => {
+  const onClickInput = () => {
     if (selectValue === "") {
       ToastError(" لطفا نوع فیلتر را مشخص کنید ");
       setCheckChooseFilter(true);
@@ -121,6 +124,7 @@ function Homesss() {
       const div = divRef.current;
       if (div) {
         div.scrollTop = 0;
+        setIsEndOfScroll(false);
       }
     }
   };
@@ -146,10 +150,10 @@ function Homesss() {
     }
   }, []);
 
+  // Increase the limit when reaching the end of scroll
   useEffect(() => {
-    if (isEndOfScroll) {
-      // Increase the limit when reaching the end of scroll
-      setLimit((prevLimit) => prevLimit + 30); // Increase limit by 10 (or any desired value)
+    if (isEndOfScroll && totalItems > limit) {
+      setLimit((prevLimit) => prevLimit + 30);
       setIsEndOfScroll(false);
     }
   }, [isEndOfScroll]);
@@ -177,14 +181,11 @@ function Homesss() {
       </div>
 
       <div ref={divRef} className="scrollable-content">
-        {isLoading ? (
-          <Spinner />
-        ) : (
-          <ContactList
-            contacts={contacts}
-            handleContactClick={handleContactClick}
-          />
-        )}
+        {isLoading ? <Spinner /> : null}
+        <ContactList
+          contacts={contacts}
+          handleContactClick={handleContactClick}
+        />
       </div>
     </div>
   );
